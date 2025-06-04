@@ -1,7 +1,7 @@
 const mysql2 = require('mysql2');
 
 const connection = mysql2.createConnection({
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || 'localhost', // Sostituisci con l'host del tuo database
     user: process.env.DB_USER,
     port: process.env.DB_PORT,
     password: process.env.DB_PASSWORD, // Sostituisci con la tua password
