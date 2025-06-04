@@ -1,6 +1,6 @@
 function checkTime(req, res, next) {
   const currentHour = new Date().getHours();
-  if (currentHour >= 9 && currentHour < 17) {
+  if (currentHour >= 9 && currentHour < 23) {
     next(); // Proceed to the next middleware or route handler
   } else {
     res.status(403).json({

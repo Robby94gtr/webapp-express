@@ -1,64 +1,79 @@
-const Movie = require('../models/movie');
+const connection = require('../data/db.js');
+ 
 
 function getAllMovies(req, res) {
-    Movie.find({}, (err, movies) => {
+   connection.query('SELECT * FROM movies', (err, results) => {
         if (err) {
-            return res.status(500).json({ error: 'Error fetching movies' });
+             return res.status(500).json({ error: 'Errore nel recupero dei film', details: err.message });
         }
-        res.status(200).json(movies);
+        res.status(200).json(results);
     });
 }
 
 function getMovieById(req, res) {
     const movieId = req.params.id;
-    Movie.findById(movieId, (err, movie) => {
+    connection.query('SELECT * FROM movies WHERE id = ?', [movieId], (err, results) => {
         if (err) {
-            return res.status(500).json({ error: 'Error fetching movie' });
+            return res.status(500).json({ error: 'Errore nel recupero del film', details: err.message });
         }
-        if (!movie) {
-            return res.status(404).json({ error: 'Movie not found' });
+         if (results.length === 0) {
+            return res.status(404).json({ error: 'Film non trovato' });
         }
-        res.status(200).json(movie);
+        res.status(200).json(results[0]);
     });
 }   
 
 function createMovie(req, res) {
-    const newMovie = new Movie(req.body);
-    newMovie.save((err, movie) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error creating movie' });
+    const { title, director,  relase_year } = req.body;
+    if (!title || !director || ! relase_year) {
+        return res.status(400).json({ error: 'Tutti i campi (title, director,  relase_year) sono obbligatori' });
+    }
+    connection.query(
+        'INSERT INTO movies (title, director, relase_year) VALUES (?, ?, ?)',
+        [title, director,  relase_year],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Errore nella creazione del film', details: err.message });
+            }
+            res.status(201).json({ id: result.insertId, title, director,  relase_year });
         }
-        res.status(201).json(movie);
-    });
+    );
 }
 
 function updateMovie(req, res) {
-    const movieId = req.params.id;
-    Movie.findByIdAndUpdate(movieId, req.body, { new: true }, (err, movie) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error updating movie' });
+    const { title, director,  relase_year } = req.body;
+    if (!title || !director || ! relase_year) {
+        return res.status(400).json({ error: 'Tutti i campi (title, director,  relase_year) sono obbligatori' });
+    }
+    connection.query(
+        'UPDATE movies SET title = ?, director = ?,  relase_year = ? WHERE id = ?',
+        [title, director,  relase_year, movieId],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Errore nell\'aggiornamento del film', details: err.message });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Film non trovato' });
+            }
+            res.status(200).json({ id: movieId, title, director,  relase_year });
         }
-        if (!movie) {
-            return res.status(404).json({ error: 'Movie not found' });
-        }
-        res.status(200).json(movie);
-    });
+    );
 }
 
 function deleteMovie(req, res) {
     const movieId = req.params.id;
-    Movie.findByIdAndDelete(movieId, (err, movie) => {  
+    connection.query('DELETE FROM movies WHERE id = ?', [movieId], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Error deleting movie' });
+            return res.status(500).json({ error: 'Errore nell\'eliminazione del film', details: err.message });;
         }
-        if (!movie) {
-            return res.status(404).json({ error: 'Movie not found' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Film non trovato' });
         }
-        res.status(204).send(); // No content
+        res.status(204).send();
     });
 }
 
-// Export the controller functions
+
 module.exports = {
     getAllMovies,
     getMovieById,
@@ -66,7 +81,3 @@ module.exports = {
     updateMovie,
     deleteMovie
 };
-
-
-
-
