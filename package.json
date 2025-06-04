@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "watch": "node --watch app.js"
+    "start": "node --env-file=.env app.js",
+    "watch": "node --env-file=.env --watch app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Robby94gtr/webapp-express#readme",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mysql2": "^3.14.1"
   }

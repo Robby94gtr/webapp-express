@@ -1,12 +1,21 @@
 const express = require('express');
 const app = express();
-const port = 3001;
+
+
+// Import environment variables from .env file
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables from .env file
+const port = process.env.SERVER_PORT || 3000; // Use the port from .env or default to 3000
+
 //importo il middleware per la gestione degli errori 500
 const errorsHandler = require('./middlewares/errorsHandler.js');
+
 //importo il middleware per la gestione degli errori 404
 const notFound = require('./middlewares/notFound.js');
+
 //importo il middleware per la gestione del tempo
 const checkTime = require('./middlewares/checkTime.js');
+
 // Importo il router
 const router = require('./router/router.js');
 
