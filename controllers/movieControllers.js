@@ -24,30 +24,30 @@ function getMovieById(req, res) {
 }   
 
 function createMovie(req, res) {
-    const { title, director,  relase_year } = req.body;
-    if (!title || !director || ! relase_year) {
-        return res.status(400).json({ error: 'Tutti i campi (title, director,  relase_year) sono obbligatori' });
+    const { title, director, year } = req.body;
+    if (!title || !director || !year) {
+        return res.status(400).json({ error: 'Tutti i campi (title, director, year) sono obbligatori' });
     }
     connection.query(
-        'INSERT INTO movies (title, director, relase_year) VALUES (?, ?, ?)',
-        [title, director,  relase_year],
+        'INSERT INTO movies (title, director,year) VALUES (?, ?, ?)',
+        [title, director, year],
         (err, result) => {
             if (err) {
                 return res.status(500).json({ error: 'Errore nella creazione del film', details: err.message });
             }
-            res.status(201).json({ id: result.insertId, title, director,  relase_year });
+            res.status(201).json({ id: result.insertId, title, director, year });
         }
     );
 }
 
 function updateMovie(req, res) {
-    const { title, director,  relase_year } = req.body;
-    if (!title || !director || ! relase_year) {
-        return res.status(400).json({ error: 'Tutti i campi (title, director,  relase_year) sono obbligatori' });
+    const { title, director, year } = req.body;
+    if (!title || !director || !year) {
+        return res.status(400).json({ error: 'Tutti i campi (title, director, year) sono obbligatori' });
     }
     connection.query(
-        'UPDATE movies SET title = ?, director = ?,  relase_year = ? WHERE id = ?',
-        [title, director,  relase_year, movieId],
+        'UPDATE movies SET title = ?, director = ?, year = ? WHERE id = ?',
+        [title, director, year, movieId],
         (err, result) => {
             if (err) {
                 return res.status(500).json({ error: 'Errore nell\'aggiornamento del film', details: err.message });
@@ -55,7 +55,7 @@ function updateMovie(req, res) {
             if (result.affectedRows === 0) {
                 return res.status(404).json({ error: 'Film non trovato' });
             }
-            res.status(200).json({ id: movieId, title, director,  relase_year });
+            res.status(200).json({ id: movieId, title, director, year });
         }
     );
 }

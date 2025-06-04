@@ -7,6 +7,7 @@ const errorsHandler = require('./middlewares/errorsHandler.js');
 const notFound = require('./middlewares/notFound.js');
 //importo il middleware per la gestione del tempo
 const checkTime = require('./middlewares/checkTime.js');
+// Importo il router
 const router = require('./router/router.js');
 
 //USO IL MIDDLEWARE checkTime
@@ -18,12 +19,16 @@ app.use(express.json());
 //asset static files from the 'public' directory
 app.use(express.static('public'));
 
+// Use the router for handling routesAdd commentMore actions
+app.use('/api', router);
+
 // Sample route
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 
 });
 
+// Middleware to handle 404 and other errors
 app.use(notFound); // Handle 404 errors
 app.use(errorsHandler); // Handle other errors
 
