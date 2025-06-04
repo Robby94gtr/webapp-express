@@ -11,7 +11,13 @@ function getAllMovies(req, res) {
 }
 
 function getMovieById(req, res) {
-    const movieId = req.params.id;
+     if (!req.params.id) {
+        return res.status(400).json({ error: 'ID mancante' });
+    }
+    const movieId = parseInt(req.params.id, 10);
+    if (isNaN(movieId) || movieId <= 0) {
+        return res.status(400).json({ error: 'ID non valido' });
+    }
     connection.query('SELECT * FROM movies WHERE id = ?', [movieId], (err, results) => {
         if (err) {
             return res.status(500).json({ error: 'Errore nel recupero del film', details: err.message });
