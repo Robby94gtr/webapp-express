@@ -7,6 +7,14 @@ const dotenv = require('dotenv');
 dotenv.config(); // Load environment variables from .env file
 const port = process.env.SERVER_PORT || 3000; // Use the port from .env or default to 3000
 
+//  importo e uso il pacchetto cors per gestire le richieste cross-origin
+const cors = require('cors');
+app.use(cors()); // Enable CORS for all routes
+
+// Importo il middleware per il cors
+app.use(cors({origin: process.env.FE_APP})); // Set CORS origin from environment variable 
+
+
 //importo il middleware per la gestione degli errori 500
 const errorsHandler = require('./middlewares/errorsHandler.js');
 
@@ -28,7 +36,7 @@ app.use(express.json());
 //asset static files from the 'public' directory
 app.use(express.static('public'));
 
-// Use the router for handling routesAdd commentMore actions
+// Use the router for handling routes
 app.use('/api', router);
 
 // Sample route
