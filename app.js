@@ -11,7 +11,7 @@ const port = process.env.SERVER_PORT || 3000; // Use the port from .env or defau
 const cors = require('cors');
 
 // Importo il middleware per il cors
-app.use(cors({origin: process.env.FE_APP})); // Set CORS origin from environment variable 
+app.use(cors({ origin: process.env.FE_APP })); // Set CORS origin from environment variable 
 
 
 //importo il middleware per la gestione degli errori 500
@@ -28,6 +28,8 @@ const router = require('./router/router.js');
 
 //USO IL MIDDLEWARE checkTime
 app.use(checkTime); // usa il middleware per controllare l'orario di accesso
+
+const imagePath = require('./middlewares/imagePath.js');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -47,6 +49,9 @@ app.get('/', (req, res) => {
 // Middleware to handle 404 and other errors
 app.use(notFound); // Handle 404 errors
 app.use(errorsHandler); // Handle other errors
+
+// Middleware to serve images from the 'public/images' directory
+app.use(imagePath); // Serve images from the 'public/images' directory
 
 // Start the server
 app.listen(port, () => {
