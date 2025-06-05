@@ -46,7 +46,7 @@ function show(req, res) {
                     return res.status(500).json({ error: 'Errore nel calcolo della media delle recensioni', details: err.message });
                 }
                 if (mediaResults.length > 0) {
-                    movie.average_rating = mediaResults[0].average_rating || 0;
+                    movie.average_rating = Math.round(mediaResults[0].average_rating) || 0;
                 } else {
                     movie.average_rating = 0;
                 }
